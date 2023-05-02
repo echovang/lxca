@@ -34,7 +34,7 @@ if ! command_exists docker-compose; then
 
   if [ "$install_docker_compose" = "y" ]; then
     echo "Installing Docker Compose..."
-    sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+    sudo curl -SL https://github.com/docker/compose/releases/download/v2.17.2/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
     sudo chmod +x /usr/local/bin/docker-compose
     echo "Docker Compose has been installed."
   else
@@ -63,6 +63,18 @@ else
     echo "A macvlan network named '${network_name}' already exists."
 fi
 
+# Prompt the user for input
+read -p "Enter the LXCA container name: " CONTAINER_NAME
+read -p "Enter the IP adresss: " ADDRESS
+read -p "Enter the Docker macvlan network name: " NETWORKNAME
+
+# Create the .env file
+echo "CONTAINER_NAME=${CONTAINER_NAME}" > .env
+echo "ADDRESS=${ADDRESS}" >> .env
+echo "NETWORKNAME=${NETWORKNAME}" >> .env
+
+# Print a message to confirm the creation of the .env file
+echo "The container .env file has been created."
 
 # Image location https://datacentersupport.lenovo.com/us/en/solutions/lnvo-lxcaupd
 # Set the URL of the image file
@@ -98,33 +110,6 @@ docker load -i $FILE_NAME
 echo "Cleaning up the downloaded file..."
 rm $FILE_NAME
 
-echo "Done."
-
-
-# Create .env
-# Prompt the user for input
-read -p "Enter the LXCA container name: " CONTAINER_NAME
-read -p "Enter the IP adresss: " ADDRESS
-#read -p "Enter the IP subnet (0.0.0.0/00): " SUBNET
-#read -p "Enter the gateway: " GATEWAY
-#read -p "Enter the parent NIC: " NIC
-read -p "Enter the Docker macvlan network name: " NETWORKNAME
-#read -p "Enter the backup mount location: " BACKUP_MOUNT
-#read -p "Enter the firmware mount location: " FIRMWARE_MOUNT
-
-# Create the .env file
-echo "CONTAINER_NAME=${CONTAINER_NAME}" > .env
-echo "ADDRESS=${ADDRESS}" >> .env
-#echo "SUBNET=${SUBNET}" >> .env
-#echo "GATEWAY=${GATEWAY}" >> .env
-#echo "NIC=${NIC}" >> .env
-#echo "BACKUP_MOUNT=${BACKUP_MOUNT}" >> .env
-echo "NETWORKNAME=${NETWORKNAME}" >> .env
-#echo "FIRMWARE_MOUNT=${FIRMWARE_MOUNT}" >> .env
-
-# Print a message to confirm the creation of the .env file
-echo "The container .env (environment variable) file has been created."
-
-if echo "Creating the LXCA container"
-    sudo COMPOSE_HTTP_TIMEOUT=300 docker-compose -p ${CONTAINER_NAME} ––env-file=.env up -d
-fi
+# Run the docker-compose up command
+echo "Creating the LXCA container..."
+sudo COMPOSE_HTTP_TIMEOUT=300 docker-compose -p ${CONTAINER_NAME} --env-file=.env up -d
