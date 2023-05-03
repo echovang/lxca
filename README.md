@@ -13,4 +13,4 @@ Image and YAML source: https://datacentersupport.lenovo.com/us/en/solutions/lnvo
 
 docker-compose.yml network setting is modified to join an existing macvlan vs creating one. This is to allow the script to be reused to deploy additional LXCA containers on the same network. The script creates the macvlan if one isn't present.
 
-Advance install and IPv6: https://sysmgt.lenovofiles.com/help/topic/com.lenovo.lxca.doc/setup_vm_physicallyseparatenetwork_step6_installlxca_docker.html?cp=1_5_0_1_1_5_2
+Advance installation and IPv6: https://sysmgt.lenovofiles.com/help/topic/com.lenovo.lxca.doc/setup_vm_physicallyseparatenetwork_step6_installlxca_docker.html?cp=1_5_0_1_1_5_2
