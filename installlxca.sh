@@ -24,6 +24,10 @@ if ! command -v docker >/dev/null 2>&1; then
         # Install Docker CE
         sudo apt-get update
         sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+        
+        # Add SU
+        sudo groupadd docker
+        sudo usermod -aG docker $USER
     else
         echo "Skipping Docker installation."
     fi
