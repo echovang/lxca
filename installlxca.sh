@@ -13,7 +13,7 @@ if ! command_exists docker; then
   if [ "$install_docker" = "y" ]; then
     echo "Installing Docker..."
     sudo apt-get update
-    sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common gnupg wget
+    sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common gnupg
     sudo install -m 0755 -d /etc/apt/keyrings
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
     sudo chmod a+r /etc/apt/keyrings/docker.gpg
@@ -68,7 +68,7 @@ fi
 
 # Prompt the user for input
 read -p "Enter the LXCA container name: " CONTAINER_NAME
-read -p "Enter the IP adresss: " ADDRESS
+read -p "Enter the IP adress: " ADDRESS
 read -p "Enter the Docker macvlan network name: " NETWORKNAME
 
 # Create the .env file
