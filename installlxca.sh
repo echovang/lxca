@@ -84,7 +84,8 @@ IMAGE_URL="https://download.lenovo.com/servers/mig/2023/02/27/56998/lnvgy_sw_lxc
 FILE_NAME="lnvgy_sw_lxca_container_264-4.0.0_anyos_noarch.tar.gz"
 
 # Set the image name and tag
-IMAGE_NAME="lxca"
+IMAGE_NAME="lenovo/lxca"
+IMAGE_TAG="4.0.0-264"
 
 # Check if Docker is installed
 if ! command -v docker &> /dev/null; then
@@ -92,24 +93,31 @@ if ! command -v docker &> /dev/null; then
     exit 1
 fi
 
-# Check if the image already exists in Docker
-if docker images | grep -q "$IMAGE_NAME"; then
-    echo "Docker image $IMAGE_NAME already exists. Skipping download and load."
-    exit 0
+# Check if the image already exists in Docker with the specified version
+if docker images --format "{{.Repository}}:{{.Tag}}" | grep -q "^$IMAGE_NAME:$IMAGE_TAG\$"; then
+    echo "Docker image $IMAGE_NAME:$IMAGE_TAG already exists. Skipping download and load."
+else
+    # Download the image file
+    echo "Downloading the image file..."
+    curl -O $IMAGE_URL
+
+    # Load the image file into Docker
+    echo "Loading the image file into Docker..."
+    docker load -i $FILE_NAME
+
+    # Remove the downloaded file
+    echo "Cleaning up the downloaded file..."
+    rm $FILE_NAME
 fi
 
-# Download the image file
-echo "Downloading the image file..."
-curl -O $IMAGE_URL
+# Check if Docker Compose is installed
+if ! command -v docker-compose &> /dev/null; then
+    echo "Docker Compose not found. Please install Docker Compose and try again."
+    exit 1
+fi
 
-# Load the image file into Docker
-echo "Loading the image file into Docker..."
-docker load -i $FILE_NAME
+# Run Docker Compose
+echo "Creating LXCA Container..."
+COMPOSE_HTTP_TIMEOUT=300 docker-compose -p ${CONTAINER_NAME} --env-file=.env up -d
 
-# Remove the downloaded file
-echo "Cleaning up the downloaded file..."
-rm $FILE_NAME
-
-# Run the docker-compose up command
-echo "Creating the LXCA container..."
-sudo COMPOSE_HTTP_TIMEOUT=300 docker-compose -p ${CONTAINER_NAME} --env-file=.env up -d
+echo "Done. Please allow a few minutes for LXCA to start"
