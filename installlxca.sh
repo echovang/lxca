@@ -13,7 +13,7 @@ if ! command_exists docker; then
   if [ "$install_docker" = "y" ]; then
     echo "Installing Docker..."
     sudo apt-get update
-    sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common gnupg
+    sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common gnupg wget
     sudo install -m 0755 -d /etc/apt/keyrings
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
     sudo chmod a+r /etc/apt/keyrings/docker.gpg
@@ -41,6 +41,9 @@ if ! command_exists docker-compose; then
     echo "Docker Compose will not be installed."
   fi
 fi
+
+# Download docker-compose.yml
+wget https://github.com/echovang/lxca/raw/main/docker-compose.yml
 
 # Define the network name and driver
 network_name="mymacvlan"
