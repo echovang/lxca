@@ -1,45 +1,50 @@
 #!/bin/bash
 
-# Function to check if a command exists
-command_exists() {
-  command -v "$1" >/dev/null 2>&1
-}
+# Check if Docker is installed
+if ! command -v docker >/dev/null 2>&1; then
+    echo "Docker is not installed. Would you like to install it? (y/n)"
+    read -r install_docker
 
-# Check for Docker and prompt for installation if not found
-if ! command_exists docker; then
-  echo "Docker is not installed."
-  read -p "Do you want to install Docker? (y/n): " install_docker
+    if [ "$install_docker" = "y" ] || [ "$install_docker" = "Y" ]; then
+        # Update package index and install required dependencies
+        sudo apt-get update
+        sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common gnupg
 
-  if [ "$install_docker" = "y" ]; then
-    echo "Installing Docker..."
-    sudo apt-get update
-    sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common gnupg
-    sudo install -m 0755 -d /etc/apt/keyrings
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-    sudo chmod a+r /etc/apt/keyrings/docker.gpg
-    sudo add-apt-repository "deb [arch=$(dpkg --print-architecture)] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-    sudo apt-get update
-    sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-    sudo usermod -aG docker $(whoami)
-    echo "Docker has been installed. You may need to log out and log back in for the changes to take effect."
-  else
-    echo "Docker will not be installed."
-  fi
+        # Add Docker's official GPG key
+        sudo install -m 0755 -d /etc/apt/keyrings
+        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+        sudo chmod a+r /etc/apt/keyrings/docker.gpg
+
+        # Add Docker repository
+        echo \
+        "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+        "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+        sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+        # Install Docker CE
+        sudo apt-get update
+        sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+    else
+        echo "Skipping Docker installation."
+    fi
+else
+    echo "Docker is already installed."
 fi
 
-# Check for Docker Compose and prompt for installation if not found
-if ! command_exists docker-compose; then
-  echo "Docker Compose is not installed."
-  read -p "Do you want to install Docker Compose? (y/n): " install_docker_compose
+# Check if Docker Compose is installed
+if ! command -v docker-compose >/dev/null 2>&1; then
+    echo "Docker Compose is not installed. Would you like to install it? (y/n)"
+    read -r install_docker_compose
 
-  if [ "$install_docker_compose" = "y" ]; then
-    echo "Installing Docker Compose..."
-    sudo curl -SL https://github.com/docker/compose/releases/download/v2.17.2/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
-    sudo chmod +x /usr/local/bin/docker-compose
-    echo "Docker Compose has been installed."
-  else
-    echo "Docker Compose will not be installed."
-  fi
+    if [ "$install_docker_compose" = "y" ] || [ "$install_docker_compose" = "Y" ]; then
+        # Install Docker Compose
+        sudo curl -SL https://github.com/docker/compose/releases/download/v2.17.2/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
+        sudo chmod +x /usr/local/bin/docker-compose
+    else
+        echo "Skipping Docker Compose installation."
+    fi
+else
+    echo "Docker Compose is already installed."
 fi
 
 # Download docker-compose.yml
