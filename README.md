@@ -11,7 +11,7 @@ rm installlxca.sh &> /dev/null; wget https://github.com/echovang/lxca/raw/main/i
 
 Image and YAML source: https://datacentersupport.lenovo.com/us/en/solutions/lnvo-lxcaupd
 
-docker-compose.yml network setting is modified to join an existing macvlan vs creating one. This is to allow the script to be reused to deploy additional LXCA containers on the same network. The script creates the macvlan is one isn't present.
+docker-compose.yml network setting is modified to join an existing macvlan vs creating one. This is to allow the script to be reused to deploy additional LXCA containers on the same network. The script creates the macvlan if one isn't present.
 
 Advance install and IPv6
 
