@@ -5,4 +5,6 @@ Ubuntu/Debian focused.
 
 Run as root. Make note of network settings and ethernet parent interface.
 
+Make a Docker Compose directory.
+
 rm installlxca.sh &> /dev/null; wget https://github.com/echovang/lxca/raw/main/installlxca.sh && bash installlxca.sh
