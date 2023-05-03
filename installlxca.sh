@@ -43,7 +43,12 @@ else
     echo "Docker Compose is already installed."
 fi
 
+echo "Downloading Docker Compose YAML file."
 wget https://github.com/echovang/lxca/raw/main/docker-compose.yml
+
+interfaces=$(ip -o link show | awk -F': ' '{print $2}')
+echo "Network Interfaces:"
+echo "$interfaces"
 
 network_name="mymacvlan"
 network_driver="macvlan"
@@ -107,4 +112,4 @@ COMPOSE_HTTP_TIMEOUT=300 docker-compose -p ${CONTAINER_NAME} --env-file=.env up 
 
 echo "Done."
 echo "Please allow a few minutes for LXCA to start"
-echo "Access LXCA on https://"
+echo "Access LXCA on https://${ADDRESS}"
