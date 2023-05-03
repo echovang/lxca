@@ -132,4 +132,6 @@ fi
 echo "Creating LXCA Container..."
 COMPOSE_HTTP_TIMEOUT=300 docker-compose -p ${CONTAINER_NAME} --env-file=.env up -d
 
-echo "Done. Please allow a few minutes for LXCA to start"
+echo "Done."
+echo "Please allow a few minutes for LXCA to start"
+echo "Access LXCA on https://"
