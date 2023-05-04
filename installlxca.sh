@@ -108,7 +108,7 @@ if ! command -v docker-compose &> /dev/null; then
 fi
 
 echo "Creating LXCA Container..."
-COMPOSE_HTTP_TIMEOUT=300 docker-compose -p ${CONTAINER_NAME} --env-file=.env up -d
+COMPOSE_HTTP_TIMEOUT=300 docker compose -p ${CONTAINER_NAME} --env-file=.env up -d
 
 echo "Done."
 echo "Please allow a few minutes for LXCA to start"
