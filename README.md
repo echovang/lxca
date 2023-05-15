@@ -1,7 +1,7 @@
 # LXCA
 One line installation of Lenovo XClarity Administrator for Docker.
 
-Ubuntu focused.
+x86_64 Ubuntu/Debian focused.
 
 Run as root.
 
