@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+
+  lxca:
+    image: lenovo/lxca:4.0.0-264
+    container_name: ${CONTAINER_NAME}
+    tty: true
+    stop_grace_period: 60s
+    volumes:
+      #bind mount example
+      # - /home/user/test:/mnt/test
+      #docker volume mount
+      - data:/opt/lenovo/lxca/data
+      - postgresql:/var/lib/postgresql/data
+      - log:/var/log
+      - confluent-etc:/etc/confluent
+      - confluent-log:/var/log/confluent
+      - confluent:/var/lib/confluent
+      - propconf:/opt/lenovo/lxca/bin/conf
+    # TODO depending on the use case (and the LXCA features), networking should probably be macvlan or specific port forwarding instead of host mode so it doesn't conflict with other things on the same host
+    networks:
+      default:
+        ipv4_address: ${ADDRESS}
+
+volumes:
+  data:
+    name: ${CONTAINER_NAME}-data
+  postgresql:
+    name: ${CONTAINER_NAME}-postgresql
+  log:
+    name: ${CONTAINER_NAME}-log
+  confluent-etc:
+    name: ${CONTAINER_NAME}-confluent-etc
+  confluent-log:
+    name: ${CONTAINER_NAME}-confluent-log
+  confluent:
+    name: ${CONTAINER_NAME}-confluent
+  propconf:
+    name: ${CONTAINER_NAME}-propconf
+
+networks:
+  default:
+    name: ${NETWORKNAME}
+    external: true
+    
