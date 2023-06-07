@@ -20,7 +20,7 @@ services:
       - propconf:/opt/lenovo/lxca/bin/conf
     # TODO depending on the use case (and the LXCA features), networking should probably be macvlan or specific port forwarding instead of host mode so it doesn't conflict with other things on the same host
     networks:
-      default:
+      lan:
         ipv4_address: ${ADDRESS}
 
 volumes:
@@ -40,7 +40,13 @@ volumes:
     name: ${CONTAINER_NAME}-propconf
 
 networks:
-  default:
-    name: ${NETWORKNAME}
-    external: true
+  lan:
+    name: lan
+    driver: macvlan
+    driver_opts:
+      parent: ens34
+    ipam:
+      config:
+        - subnet: 10.5.5.0/24
+          gateway: 10.5.5.1
     
